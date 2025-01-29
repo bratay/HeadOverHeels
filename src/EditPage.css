@@ -1,0 +1,50 @@
+.edit-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px;
+  height: 100vh; /* Make the edit page take up the full height of the viewport */
+}
+
+.edit-page h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.edit-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.edit-buttons button {
+  margin: 0 10px;
+}
+
+.edit-buttons .active {
+  font-weight: bold;
+}
+
+.edit-section {
+  width: 100%;
+  max-width: 600px;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  flex-grow: 1; /* Allow the section to grow and take up available space */
+  overflow-y: auto;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  height: calc(100vh - 150px); /* Adjust height to fit within the viewport, accounting for padding and margins */
+}
+
+.edit-section h3 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.scrollable {
+  flex-grow: 1; /* Allow the scrollable section to grow and take up available space */
+  overflow-y: auto;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}

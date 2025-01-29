@@ -1,0 +1,124 @@
+body {
+  position: relative;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('./assets/images/profile-creation-background.png'); /* Correct path to your background image */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  filter: blur(8px); /* Apply blur effect */
+  z-index: -1; /* Ensure the background is behind other content */
+}
+
+.profile-creation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: left;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto; /* Center horizontally */
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8); /* Add a semi-transparent background */
+  border-radius: 10px 10px 0 0; /* Rounded corners at the top */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; /* Enable vertical scrolling */
+  position: relative; /* Ensure the autocomplete list is positioned correctly */
+}
+
+.profile-creation h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.profile-creation form {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-creation label {
+  margin-bottom: 15px;
+  color: #555;
+}
+
+.profile-creation input[type="text"],
+.profile-creation input[type="number"],
+.profile-creation select,
+.profile-creation textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: #f0f8ff; /* Light blue background for inputs */
+}
+
+.profile-creation textarea {
+  resize: vertical;
+}
+
+.profile-creation button {
+  padding: 10px 20px;
+  background-color: #ff69b4; /* Hot pink background for the button */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.profile-creation button:hover {
+  background-color: #ff1493; /* Darker pink on hover */
+}
+
+.autocomplete-list {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+  width: calc(100% - 20px); /* Adjust width to match the input */
+  z-index: 1000;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.autocomplete-list li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.autocomplete-list li:hover {
+  background-color: #f0f0f0;
+}
+
+.age-range, .height-range {
+  display: flex;
+  gap: 10px;
+}
+
+.age-range input, .height-range input {
+  width: 50%;
+}
+
+.invalid {
+  border: 2px solid red;
+}
+
+.hobbies-select {
+  height: 150px; /* Adjust the height as needed */
+}
