@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { popularHobbies } from './hardcodedData';
 import './ProfileCreation.css';
-import { cityNameApiKey, ipInfoApiKey } from '../keys'; 
+import { cityNameApiKey, ipInfoApiKey } from './keys'; 
 
 async function getUniversityNames() {
   const apiUrl = 'https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json';
