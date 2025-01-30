@@ -12,6 +12,10 @@ app.post('/createProfile', (req, res) => {
     res.sendStatus(200);
 });
 
+app.post('/createPreferences', (req, res) => {
+    res.sendStatus(200);
+});
+
 app.put('/updateProfile', (req, res) => {
   res.sendStatus(200);
 });
