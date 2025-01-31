@@ -3,6 +3,15 @@ const { Pool } = require('pg');
 const { dbPassword, dbUserName, dbName, dbPort, dbHost } = require('../src/keys');
 const { createProfile } = require('./queries/createProfileQuery');
 const { createPreferences } = require('./queries/createPreferencesQuery');
+const { updateProfile } = require('./queries/updateProfileQuery');
+const { updatePreferences } = require('./queries/updatePreferencesQuery');
+const { sendMessage } = require('./queries/sendMessageQuery');
+const { getLikes } = require('./queries/getLikesQuery');
+const { swipe } = require('./queries/swipeQuery');
+const { getMatches } = require('./queries/getMatchesQuery');
+const { getConversations } = require('./queries/getConversationsQuery');
+const { getMessages } = require('./queries/getMessagesQuery');
+const { blockUser } = require('./queries/blockUserQuery');
 const app = express();
 const port = 3001;
 
@@ -66,9 +75,10 @@ app.post('/createPreferences', async (req, res) => {
 });
 
 app.put('/updateProfile', async (req, res) => {
-  const { uid, name, age, bio } = req.body;
+  const profileData = req.body;
+
   try {
-    await pool.query('UPDATE profiles SET name = $1, age = $2, bio = $3 WHERE uid = $4', [name, age, bio, uid]);
+    await updateProfile(pool, profileData);
     res.sendStatus(200);
   } catch (err) {
     console.error(err);
@@ -77,9 +87,10 @@ app.put('/updateProfile', async (req, res) => {
 });
 
 app.put('/updatePreferences', async (req, res) => {
-  const { uid, preferences } = req.body;
+  const preferencesData = req.body;
+
   try {
-    await pool.query('UPDATE preferences SET preferences = $1 WHERE uid = $2', [preferences, uid]);
+    await updatePreferences(pool, preferencesData);
     res.sendStatus(200);
   } catch (err) {
     console.error(err);
@@ -93,9 +104,10 @@ app.get('/getRecommendations', async (req, res) => {
 });
 
 app.post('/sendMessage', async (req, res) => {
-  const { senderUid, receiverUid, message } = req.body;
+  const messageData = req.body;
+
   try {
-    await pool.query('INSERT INTO messages (sender_uid, receiver_uid, message) VALUES ($1, $2, $3)', [senderUid, receiverUid, message]);
+    await sendMessage(pool, messageData);
     res.sendStatus(200);
   } catch (err) {
     console.error(err);
@@ -105,11 +117,10 @@ app.post('/sendMessage', async (req, res) => {
 
 app.get('/getLikes', async (req, res) => {
   const { uid } = req.query;
+
   try {
-    // 
-    const result = await pool.query('SELECT uid FROM likes WHERE swipeyuid = $1', [uid]);
-    // TODO: This will be a join, profiles of the users who liked the current user
-    req.sendStatus(200); // return list of profiles that liked you 
+    const result = await getLikes(pool, uid);
+    res.json(result);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
@@ -117,10 +128,11 @@ app.get('/getLikes', async (req, res) => {
 });
 
 app.post('/swipe', async (req, res) => {
-  const { swiperUid, swipeyUid, direction } = req.body;
+  const swipeData = req.body;
+
   try {
-    await pool.query('INSERT INTO swipes (uid, swipeyUid, direction) VALUES ($1, $2, $3)', [swiperUid, swipeyUid, direction]);
-    res.json({ match: true });
+    const result = await swipe(pool, swipeData);
+    res.json(result);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
@@ -129,22 +141,22 @@ app.post('/swipe', async (req, res) => {
 
 app.get('/getMatches', async (req, res) => {
   const { uid } = req.query;
+
   try {
-    // TODO: this will be a join from matches table and profile table
-    const result = await pool.query('SELECT matches FROM matches WHERE uid = $1', [uid]);
-    res.json({ matches: result.rows });
+    const result = await getMatches(pool, uid);
+    res.json(result);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
   }
 });
 
-// TODO: get all the people that you have messaged and have messaged you (conversation you have with people) 
 app.get('/getConversations', async (req, res) => {
   const { uid } = req.query;
+
   try {
-    const result = await pool.query('SELECT message, timestamp FROM messages WHERE sender_uid = $1 AND receiver_uid = $2', [uid, receiverUid]);
-    res.json({ messages: result.rows });
+    const result = await getConversations(pool, uid);
+    res.json(result);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
@@ -153,9 +165,10 @@ app.get('/getConversations', async (req, res) => {
 
 app.get('/getMessages', async (req, res) => {
   const { uid, receiverUid } = req.query;
+
   try {
-    const result = await pool.query('SELECT message, timestamp FROM messages WHERE sender_uid = $1 AND receiver_uid = $2', [uid, receiverUid]);
-    res.json({ messages: result.rows });
+    const result = await getMessages(pool, uid, receiverUid);
+    res.json(result);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
@@ -164,8 +177,9 @@ app.get('/getMessages', async (req, res) => {
 
 app.post('/blockUser', async (req, res) => {
   const { uid, uidToBlock } = req.query;
+
   try {
-    await pool.query('UPDATE INTO blocks (uid, uid_to_block) VALUES ($1, $2)', [uid, uidToBlock]);
+    await blockUser(pool, uid, uidToBlock);
     res.sendStatus(200);
   } catch (err) {
     console.error(err);
