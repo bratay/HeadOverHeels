@@ -1,8 +1,8 @@
 async function getMessages(pool, uid, receiverUid) {
   const query = `
     SELECT * FROM messages
-    WHERE (sender_id = $1 AND receiver_id = $2)
-       OR (sender_id = $2 AND receiver_id = $1)
+    WHERE (uid = $1 AND receiverUid = $2)
+       OR (uid = $2 AND receiverUid = $1)
     ORDER BY timestamp;
   `;
   const values = [uid, receiverUid];

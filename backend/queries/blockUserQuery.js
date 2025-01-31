@@ -3,7 +3,7 @@ async function blockUser(pool, uid, uidToBlock) {
     UPDATE Matches
     SET status = 'blocked'
     WHERE (uid = $1 AND matchedUid = $2)
-       OR (uid = $2 AND matchedUid = $1);
+      OR (uid = $2 AND matchedUid = $1);
   `;
   const values = [uid, uidToBlock];
 

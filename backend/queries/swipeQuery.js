@@ -31,7 +31,8 @@ async function swipe(pool, swipeData) {
 
         const insertMatchQuery = `
           INSERT INTO Matches (uid, matchedUid, status)
-          VALUES ($1, $2, 'matched'), ($2, $1, 'matched');
+          VALUES ($1, $2, 'matched'), ($2, $1, 'matched')
+          ON CONFLICT DO NOTHING;
         `;
         await client.query(insertMatchQuery, checkMutualSwipeValues);
       }

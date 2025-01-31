@@ -76,6 +76,7 @@ app.post('/createPreferences', async (req, res) => {
 
 app.put('/updateProfile', async (req, res) => {
   const profileData = req.body;
+  console.log(req.body);
 
   try {
     await updateProfile(pool, profileData);
@@ -98,6 +99,7 @@ app.put('/updatePreferences', async (req, res) => {
   }
 });
 
+// TODO: design and build recommendations endpoint
 app.get('/getRecommendations', async (req, res) => {
   const { uid } = req.query;
   res.json({ recommendations: ['person1', 'person2', 'person3'] });
@@ -116,7 +118,8 @@ app.post('/sendMessage', async (req, res) => {
 });
 
 app.get('/getLikes', async (req, res) => {
-  const { uid } = req.query;
+  const { uid } = req.body;
+  console.log(req.body);
 
   try {
     const result = await getLikes(pool, uid);
@@ -140,7 +143,7 @@ app.post('/swipe', async (req, res) => {
 });
 
 app.get('/getMatches', async (req, res) => {
-  const { uid } = req.query;
+  const { uid } = req.body;
 
   try {
     const result = await getMatches(pool, uid);
@@ -151,8 +154,9 @@ app.get('/getMatches', async (req, res) => {
   }
 });
 
+// TODO: This query is wrong
 app.get('/getConversations', async (req, res) => {
-  const { uid } = req.query;
+  const { uid } = req.body;
 
   try {
     const result = await getConversations(pool, uid);
@@ -164,7 +168,7 @@ app.get('/getConversations', async (req, res) => {
 });
 
 app.get('/getMessages', async (req, res) => {
-  const { uid, receiverUid } = req.query;
+  const { uid, receiverUid } = req.body;
 
   try {
     const result = await getMessages(pool, uid, receiverUid);
@@ -175,8 +179,8 @@ app.get('/getMessages', async (req, res) => {
   }
 });
 
-app.post('/blockUser', async (req, res) => {
-  const { uid, uidToBlock } = req.query;
+app.put('/blockUser', async (req, res) => {
+  const { uid, uidToBlock } = req.body;
 
   try {
     await blockUser(pool, uid, uidToBlock);

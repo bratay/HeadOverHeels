@@ -1,10 +1,10 @@
 async function sendMessage(pool, messageData) {
-  const { senderUid, receiverUid, message } = messageData;
+  const { uid, receiverUid, message, read } = messageData;
 
   await pool.query(
-    `INSERT INTO messages (sender_uid, receiver_uid, message)
-     VALUES ($1, $2, $3)`,
-    [senderUid, receiverUid, message]
+    `INSERT INTO messages (uid, receiverUid, message, "read")
+     VALUES ($1, $2, $3, $4)`,
+    [uid, receiverUid, message, read]
   );
 }
 

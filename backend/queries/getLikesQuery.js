@@ -10,6 +10,7 @@ async function getLikes(pool, uid) {
 
   try {
     const result = await pool.query(query, values);
+    console.log(result.rows);
     return result.rows;
   } catch (err) {
     throw new Error('Error retrieving likes: ' + err.message);
