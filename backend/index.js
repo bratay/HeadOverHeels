@@ -1,13 +1,15 @@
 const express = require('express');
 const { Pool } = require('pg');
-const { dbPassword } = require('./keys');
+const { dbPassword, dbUserName, dbName, dbPort, dbHost } = require('../src/keys');
+const { createProfile } = require('./queries/createProfileQuery');
+const { createPreferences } = require('./queries/createPreferencesQuery');
 const app = express();
 const port = 3001;
 
 // Database connection configuration
 const pool = new Pool({
   user: dbUserName,
-  host: 'your_db_host',
+  host: dbHost,
   database: dbName,
   password: dbPassword,
   port: dbPort,
@@ -15,29 +17,51 @@ const pool = new Pool({
 
 app.use(express.json());
 
+app.listen(port, () => {
+  console.log(`HH backend server running at http://localhost:${port}`);
+});
+
 app.get('/', (req, res) => {
-  res.send('Hello from the backend!');
+  res.send('Hello from Head over Heels backend!');
 });
 
 app.post('/createProfile', async (req, res) => {
-  const { name, age, bio } = req.body;
+  const profileData = req.body;
+
+  // Log the request body
+  console.log(req.body);
+
+  // Validate required fields
+  if (!profileData.uid) {
+    return res.status(400).send('Missing uid');
+  }
+
   try {
-    await pool.query('INSERT INTO profiles (name, age, bio) VALUES ($1, $2, $3)', [name, age, bio]);
+    await createProfile(pool, profileData);
     res.sendStatus(200);
   } catch (err) {
     console.error(err);
-    res.sendStatus(500);
+    res.status(500).send('Server error');
   }
 });
 
 app.post('/createPreferences', async (req, res) => {
-  const { uid, preferences } = req.body;
+  const preferencesData = req.body;
+
+  // Log the request body
+  console.log(req.body);
+
+  // Validate required fields
+  if (!preferencesData.uid) {
+    return res.status(400).send('Missing uid');
+  }
+
   try {
-    await pool.query('INSERT INTO preferences (uid, preferences) VALUES ($1, $2)', [uid, preferences]);
+    await createPreferences(pool, preferencesData);
     res.sendStatus(200);
   } catch (err) {
     console.error(err);
-    res.sendStatus(500);
+    res.status(500).send('Server error');
   }
 });
 
@@ -147,8 +171,4 @@ app.post('/blockUser', async (req, res) => {
     console.error(err);
     res.sendStatus(500);
   }
-});
-
-app.listen(port, () => {
-  console.log(`Backend server running at http://localhost:${port}`);
 });
