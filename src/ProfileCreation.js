@@ -211,7 +211,7 @@ function ProfileCreation({ userProfile }) {
     console.log('Profile data:', formData);
 
     const profileData = {
-      uid: userProfile ? userProfile.uid : '6', // Assuming userProfile contains uid
+      uid: userProfile ? userProfile.uid : '7', // Assuming userProfile contains uid
       email: userProfile ? userProfile.email : 'abc@gmail.com', // Assuming userProfile contains email
       age: formData.age,
       name: formData.name,
