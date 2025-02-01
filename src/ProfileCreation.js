@@ -105,7 +105,8 @@ function ProfileCreation({ userProfile }) {
     interestedIn: '',
     politics: '',
     personalityType: '',
-    longestRelationship: ''
+    longestRelationship: '',
+    workout: ''
   });
 
   const [filteredCities, setFilteredCities] = useState([]);
@@ -205,10 +206,59 @@ function ProfileCreation({ userProfile }) {
     setFormData({ ...formData, hobbies: selectedHobbies });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Profile data:', formData);
-    navigate('/preferences');
+
+    const profileData = {
+      uid: userProfile ? userProfile.uid : '6', // Assuming userProfile contains uid
+      email: userProfile ? userProfile.email : 'abc@gmail.com', // Assuming userProfile contains email
+      age: formData.age,
+      name: formData.name,
+      gender: formData.gender,
+      interested_in: formData.interestedIn,
+      city: formData.city,
+      university: formData.college,
+      hobbies: formData.hobbies,
+      occupation: formData.occupation,
+      company: formData.company,
+      highest_degree: formData.degree,
+      bio: formData.bio,
+      height_feet: formData.heightFeet,
+      height_inches: formData.heightInches,
+      music_genre: formData.musicGenres,
+      zodiac: formData.zodiac,
+      drink: formData.drink,
+      smoke: formData.smoke,
+      goal: formData.lookingFor,
+      family_plans: formData.familyPlans,
+      longest_relationship: formData.longestRelationship,
+      personality: formData.personalityType,
+      political_stance: formData.politics,
+      workout: formData.workout
+    };
+
+    try {
+      const response = await fetch('http://localhost:3001/createProfile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(profileData),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Network response was not ok:', response.status, errorText);
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      console.log('API response:', result);
+      navigate('/preferences');
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (
@@ -382,6 +432,13 @@ function ProfileCreation({ userProfile }) {
             <option value="have kids and want more">Have Kids and Want More</option>
             <option value="have kids and don't want more">Have Kids and Don't Want More</option>
             <option value="not sure">Not Sure</option>
+          </select>
+        </label>
+        <label>Workout: 
+          <select name="workout" value={formData.workout} onChange={handleChange}>
+            <option value="">Select an option</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
           </select>
         </label>
         <button type="submit">Submit</button>

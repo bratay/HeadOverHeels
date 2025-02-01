@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors'); // Import the cors package
 const { Pool } = require('pg');
 const { dbPassword, dbUserName, dbName, dbPort, dbHost } = require('../src/keys');
 const { createProfile } = require('./queries/createProfileQuery');
@@ -14,6 +15,9 @@ const { getMessages } = require('./queries/getMessagesQuery');
 const { blockUser } = require('./queries/blockUserQuery');
 const app = express();
 const port = 3001;
+
+// Enable CORS for all routes
+app.use(cors());
 
 // Database connection configuration
 const pool = new Pool({
@@ -47,10 +51,10 @@ app.post('/createProfile', async (req, res) => {
 
   try {
     await createProfile(pool, profileData);
-    res.sendStatus(200);
+    res.status(200).json({ message: 'Profile created successfully' });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Server error');
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
