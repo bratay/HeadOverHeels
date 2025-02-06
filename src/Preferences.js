@@ -13,13 +13,13 @@ function Preferences() {
     distance: '',
     interestedIn: '',
     lookingFor: '',
-    zodiac: '',
     education: '',
     familyPlans: '',
     drink: '',
     smoke: '',
     workout: '',
-    interestedInReligions: [] // Added interested in religions field
+    interestedInReligions: [], // Added interested in religions field
+    politicalStance: '' // Added political stance field
   });
 
   const navigate = useNavigate();
@@ -40,11 +40,52 @@ function Preferences() {
     setFormData({ ...formData, interestedInReligions: selectedReligions });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Preferences data:', formData);
-    // Handle form submission logic here
-    navigate('/main/swipe'); // Navigate to the swipe page after form submission
+
+    const preferencesData = {
+      uid: '13', // Assuming a static uid for now
+      workout: formData.workout,
+      age_min: formData.ageRangeLower,
+      age_max: formData.ageRangeUpper,
+      distance: formData.distance,
+      min_height_feet: formData.heightLowerFeet,
+      min_height_inches: formData.heightLowerInches,
+      max_height_feet: formData.heightUpperFeet,
+      max_height_inches: formData.heightUpperInches,
+      political_stance: formData.politicalStance, // Added political stance field
+      drink: formData.drink,
+      email: 'abc@gmail.com', // Assuming a static email for now
+      smoke: formData.smoke,
+      goal: formData.lookingFor,
+      religion: formData.interestedInReligions,
+      interested_in: formData.interestedIn,
+      highest_degree: formData.education,
+      family_plans: formData.familyPlans
+    };
+
+    try {
+      const response = await fetch('http://localhost:3001/createPreferences', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(preferencesData),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Network response was not ok:', response.status, errorText);
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      console.log('API response:', result);
+      navigate('/main/swipe');
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const isAgeRangeValid = () => {
@@ -146,15 +187,7 @@ function Preferences() {
             <option value="hookup">Hookup</option>
           </select>
         </label>
-        <label>Zodiac: 
-          <select name="zodiac" value={formData.zodiac} onChange={handleChange}>
-            <option value="">Select a sign</option>
-            {['Capricorn', 'Aquarius', 'Pisces', 'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius'].map(sign => (
-              <option key={sign} value={sign}>{sign}</option>
-            ))}
-          </select>
-        </label>
-        <label>Education: 
+        <label>Minimum education required: 
           <select name="education" value={formData.education} onChange={handleChange}>
             <option value="">Select a degree</option>
             <option value="some highschool">Some Highschool</option>
@@ -168,6 +201,7 @@ function Preferences() {
         </label>
         <label>Interested in religions: 
           <select name="interestedInReligions" multiple value={formData.interestedInReligions} onChange={handleMultiSelectChange}>
+            <option value="Any">Any</option>
             <option value="Christian">Christian</option>
             <option value="Muslim">Muslim</option>
             <option value="Hindu">Hindu</option>
@@ -187,35 +221,43 @@ function Preferences() {
             <option value="Agnostic">Agnostic</option>
           </select>
         </label>
-        <label>Family plans: 
-          <select name="familyPlans" value={formData.familyPlans} onChange={handleChange}>
+        <label>Are you ok with kids?: 
+          <select name="family" value={formData.familyPlans} onChange={handleChange}>
             <option value="">Select an option</option>
-            <option value="not sure">Not Sure</option>
-            <option value="don't want kids">Don't Want Kids</option>
-            <option value="want kids">Want Kids</option>
-            <option value="have kids and don't want more">Have Kids and Don't Want More</option>
-            <option value="have kids and want more">Have Kids and Want More</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
           </select>
         </label>
-        <label>Drink: 
+        <label>Is drinking ok?: 
           <select name="drink" value={formData.drink} onChange={handleChange}>
             <option value="">Select an option</option>
-            <option value="no">No</option>
             <option value="yes">Yes</option>
-            <option value="sometimes">Sometimes</option>
-            <option value="alot">A lot</option>
+            <option value="no">No</option>
           </select>
         </label>
-        <label>Smoke: 
+        <label>Is smoking ok?: 
           <select name="smoke" value={formData.smoke} onChange={handleChange}>
             <option value="">Select an option</option>
-            <option value="no">No</option>
-            <option value="sometimes">Sometimes</option>
             <option value="yes">Yes</option>
-            <option value="alot">A lot</option>
+            <option value="no">No</option>
           </select>
         </label>
-        <label>Workout: <input type="text" name="workout" value={formData.workout} onChange={handleChange} /></label>
+        <label>Workout: 
+          <select name="workout" value={formData.workout} onChange={handleChange}>
+            <option value="">Select an option</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </label>
+        <label>Political Stance: 
+          <select name="politicalStance" value={formData.politicalStance} onChange={handleChange}>
+            <option value="">Select an option</option>
+            <option value="republican">Republican</option>
+            <option value="democrat">Democrat</option>
+            <option value="independent">Independent</option>
+            <option value="either">Either</option>
+          </select>
+        </label>
         <button type="submit">Submit</button>
       </form>
     </div>

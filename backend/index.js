@@ -13,6 +13,7 @@ const { getMatches } = require('./queries/getMatchesQuery');
 const { getConversations } = require('./queries/getConversationsQuery');
 const { getMessages } = require('./queries/getMessagesQuery');
 const { blockUser } = require('./queries/blockUserQuery');
+const { getUserID } = require('./queries/getUserIDQuery');
 const app = express();
 const port = 3001;
 
@@ -44,14 +45,10 @@ app.post('/createProfile', async (req, res) => {
   // Log the request body
   console.log(req.body);
 
-  // Validate required fields
-  if (!profileData.uid) {
-    return res.status(400).send('Missing uid');
-  }
-
   try {
-    await createProfile(pool, profileData);
-    res.status(200).json({ message: 'Profile created successfully' });
+    const newUid = await createProfile(pool, profileData);
+    res.json(newUid);
+    return;
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
@@ -66,15 +63,15 @@ app.post('/createPreferences', async (req, res) => {
 
   // Validate required fields
   if (!preferencesData.uid) {
-    return res.status(400).send('Missing uid');
+    return res.status(400).json({ error: 'Missing uid' });
   }
 
   try {
     await createPreferences(pool, preferencesData);
-    res.sendStatus(200);
+    res.status(200).json({ message: 'Preferences created successfully' });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Server error');
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
@@ -122,8 +119,8 @@ app.post('/sendMessage', async (req, res) => {
 });
 
 app.get('/getLikes', async (req, res) => {
-  const { uid } = req.body;
-  console.log(req.body);
+  const { uid } = req.query; // Change from req.body to req.query
+  console.log(req.query); // Log the query parameters
 
   try {
     const result = await getLikes(pool, uid);
@@ -192,5 +189,17 @@ app.put('/blockUser', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
+  }
+});
+
+app.get('/getUserID', async (req, res) => {
+  const { email } = req.query;
+
+  try {
+    const uid = await getUserID(pool, email);
+    res.json({ uid });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
   }
 });

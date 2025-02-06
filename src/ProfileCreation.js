@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { popularHobbies } from './hardcodedData';
 import './ProfileCreation.css';
 import { cityNameApiKey, ipInfoApiKey } from './keys'; 
+import { setCurrentUserUID, currentUserEmail } from './CurrentUser';
 
 async function getUniversityNames() {
   const apiUrl = 'https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json';
@@ -102,7 +103,6 @@ function ProfileCreation({ userProfile }) {
     lookingFor: '',
     familyPlans: '',
     gender: '',
-    interestedIn: '',
     politics: '',
     personalityType: '',
     longestRelationship: '',
@@ -211,12 +211,10 @@ function ProfileCreation({ userProfile }) {
     console.log('Profile data:', formData);
 
     const profileData = {
-      uid: userProfile ? userProfile.uid : '7', // Assuming userProfile contains uid
-      email: userProfile ? userProfile.email : 'abc@gmail.com', // Assuming userProfile contains email
+      email: currentUserEmail,
       age: formData.age,
       name: formData.name,
       gender: formData.gender,
-      interested_in: formData.interestedIn,
       city: formData.city,
       university: formData.college,
       hobbies: formData.hobbies,
@@ -254,7 +252,7 @@ function ProfileCreation({ userProfile }) {
       }
 
       const result = await response.json();
-      console.log('API response:', result);
+      setCurrentUserUID(result.uid); // Set the current user UID
       navigate('/preferences');
     } catch (error) {
       console.error('Error:', error);
@@ -272,13 +270,6 @@ function ProfileCreation({ userProfile }) {
             <option value="">Select an option</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
-          </select>
-        </label>
-        <label>I'm interested in: 
-          <select name="interestedIn" value={formData.interestedIn} onChange={handleChange}>
-            <option value="">Select an option</option>
-            <option value="men">Men</option>
-            <option value="women">Women</option>
           </select>
         </label>
         <label>City: 
@@ -405,6 +396,7 @@ function ProfileCreation({ userProfile }) {
             <option value="">Select an option</option>
             <option value="republican">Republican</option>
             <option value="democrat">Democrat</option>
+            <option value="independent">Independent</option>
           </select>
         </label>
         <label>Longest Relationship: 
