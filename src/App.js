@@ -38,13 +38,18 @@ const AppContent = ({ isLoggedIn, setIsLoggedIn, userProfile, setUserProfile }) 
     setUserProfile(response.profileObj); // Assuming response.profileObj contains user profile information
     // TODO: Fix Google sign in to get user ID
     console.log('User profile:', response.profileObj);
-    setCurrentUserEmail(response.profileObj.email);
+    // setCurrentUserEmail(response.profileObj.verified_email);
+    //console.log('User email:', response.profileObj.verified_email);
+    
+    // Save user email
+    localStorage.setItem('userEmail', response.profileObj.verified_email);
     
     try {
-      const res = await fetch(`http://localhost:3001/getUserID?email=${ response.profileObj.email }`);
+      const res = await fetch(`http://localhost:3001/getUserID?email=${ response.profileObj.verified_email }`);
       const data = await res.json();
       if (data.uid) {
-        setCurrentUserUID(data.uid);
+        // setCurrentUserUID(data.uid);
+        localStorage.setItem('userUID', data.uid);
         navigate('/main/swipe');
       } else {
         navigate('/createProfile');

@@ -22,7 +22,6 @@ async function getUniversityNames() {
 
 async function getCityNames(query) {
   const apiUrl = `https://api.api-ninjas.com/v1/city?name=${query}&country=US&limit=300`;
-  // const cityNameApiKey = '8/e3NX2vox/l7pU2M0OUXw==SNCREyaeXQUnSa0z';
 
   try {
     const response = await fetch(apiUrl, {
@@ -211,7 +210,8 @@ function ProfileCreation({ userProfile }) {
     console.log('Profile data:', formData);
 
     const profileData = {
-      email: currentUserEmail,
+      // email: currentUserEmail,
+      email: localStorage.getItem('userEmail'),
       age: formData.age,
       name: formData.name,
       gender: formData.gender,
@@ -252,7 +252,8 @@ function ProfileCreation({ userProfile }) {
       }
 
       const result = await response.json();
-      setCurrentUserUID(result.uid); // Set the current user UID
+      //setCurrentUserUID(result.uid); // Set the current user UID
+      localStorage.setItem('userUID', result.uid); // Save the UID to localStorage
       navigate('/preferences');
     } catch (error) {
       console.error('Error:', error);
