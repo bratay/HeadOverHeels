@@ -144,7 +144,7 @@ app.post('/swipe', async (req, res) => {
 });
 
 app.get('/getMatches', async (req, res) => {
-  const { uid } = req.body;
+  const { uid } = req.query; // Change from req.body to req.query
 
   try {
     const result = await getMatches(pool, uid);
@@ -157,7 +157,7 @@ app.get('/getMatches', async (req, res) => {
 
 // TODO: This query is wrong
 app.get('/getConversations', async (req, res) => {
-  const { uid } = req.body;
+  const { uid } = req.query; // Change from req.body to req.query
 
   try {
     const result = await getConversations(pool, uid);
@@ -193,10 +193,12 @@ app.put('/blockUser', async (req, res) => {
 });
 
 app.get('/getUserID', async (req, res) => {
-  const { email } = req.query;
+  const { googleClientId } = req.query;
+  console.log("body: " + req.body);
+  console.log("query: " + req.query);
 
   try {
-    const uid = await getUserID(pool, email);
+    const uid = await getUserID(pool, googleClientId);
     res.json({ uid });
   } catch (err) {
     console.error(err);

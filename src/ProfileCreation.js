@@ -207,11 +207,10 @@ function ProfileCreation({ userProfile }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Profile data:', formData);
+    // console.log('Profile data:', formData);
 
     const profileData = {
-      // email: currentUserEmail,
-      email: localStorage.getItem('userEmail'),
+      email: "placeholder@gmail.com",
       age: formData.age,
       name: formData.name,
       gender: formData.gender,
@@ -233,7 +232,8 @@ function ProfileCreation({ userProfile }) {
       longest_relationship: formData.longestRelationship,
       personality: formData.personalityType,
       political_stance: formData.politics,
-      workout: formData.workout
+      workout: formData.workout,
+      googleClientId: sessionStorage.getItem('googleClientId')
     };
 
     try {
@@ -253,7 +253,7 @@ function ProfileCreation({ userProfile }) {
 
       const result = await response.json();
       //setCurrentUserUID(result.uid); // Set the current user UID
-      localStorage.setItem('userUID', result.uid); // Save the UID to localStorage
+      sessionStorage.setItem('userUID', result.uid); // Save the UID to sessionStorage
       navigate('/preferences');
     } catch (error) {
       console.error('Error:', error);

@@ -1,6 +1,7 @@
-const getUserID = async (pool, email) => {
-  const query = 'SELECT uid FROM profiles WHERE email = $1';
-  const values = [email];
+const getUserID = async (pool, googleClientId) => {
+  console.log('googleClient Id:', googleClientId); 
+  const query = 'SELECT uid FROM profiles WHERE google_Client_id = $1';
+  const values = [googleClientId];
 
   try {
     const res = await pool.query(query, values);

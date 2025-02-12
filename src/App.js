@@ -32,24 +32,27 @@ const App = () => {
 const AppContent = ({ isLoggedIn, setIsLoggedIn, userProfile, setUserProfile }) => {
   const navigate = useNavigate();
 
-  const responseMessage = async (response) => {
-    // Handle successful login response
-    setIsLoggedIn(true);
-    setUserProfile(response.profileObj); // Assuming response.profileObj contains user profile information
-    // TODO: Fix Google sign in to get user ID
-    console.log('User profile:', response.profileObj);
-    // setCurrentUserEmail(response.profileObj.verified_email);
-    //console.log('User email:', response.profileObj.verified_email);
-    
-    // Save user email
-    localStorage.setItem('userEmail', response.profileObj.verified_email);
+  const responseMessage = async (credentialResponse) => {
+    const userObject = credentialResponse.credential;
+    // console.log('User profile:', credentialResponse);
+
+    // Save user's Google Client ID to sessionStorage
+    sessionStorage.setItem('googleClientId', credentialResponse.clientId);
+    // console.log('Saving Google Client ID to sessionStorage:', credentialResponse.clientId);
     
     try {
-      const res = await fetch(`http://localhost:3001/getUserID?email=${ response.profileObj.verified_email }`);
+      const res = await fetch(`http://localhost:3001/getUserID?googleClientId=${credentialResponse.clientId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       const data = await res.json();
+      
+      setIsLoggedIn(true);
       if (data.uid) {
-        // setCurrentUserUID(data.uid);
-        localStorage.setItem('userUID', data.uid);
+        // console.log('User ID:', data.uid);
+        sessionStorage.setItem('userUID', data.uid);
         navigate('/main/swipe');
       } else {
         navigate('/createProfile');
