@@ -119,8 +119,8 @@ app.post('/sendMessage', async (req, res) => {
 });
 
 app.get('/getLikes', async (req, res) => {
-  const { uid } = req.query; // Change from req.body to req.query
-  console.log(req.query); // Log the query parameters
+  const { uid } = req.query;
+  console.log("get likes query: " + req.query); // Log the query parameters
 
   try {
     const result = await getLikes(pool, uid);

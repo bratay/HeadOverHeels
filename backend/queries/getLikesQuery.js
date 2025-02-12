@@ -9,6 +9,7 @@ async function getLikes(pool, uid) {
   const values = [uid];
 
   try {
+    console.log('Getting likes for:', uid);
     const result = await pool.query(query, values);
     console.log(result.rows);
     return result.rows;
