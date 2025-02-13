@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import './MainPage.css';
-// import { currentUserUID } from './CurrentUser'; // Import currentUser
 
 const LikesPage = () => {
   const [likes, setLikes] = useState([]);

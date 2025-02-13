@@ -11,7 +11,6 @@ import Layout from './Layout';
 import EditPage from './EditPage';
 import MessageDetailPage from './MessageDetailPage';
 import './App.css';
-import { setCurrentUserEmail, setCurrentUserUID } from './CurrentUser';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

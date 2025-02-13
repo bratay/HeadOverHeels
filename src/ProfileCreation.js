@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { popularHobbies } from './hardcodedData';
 import './ProfileCreation.css';
 import { cityNameApiKey, ipInfoApiKey } from './keys'; 
-import { setCurrentUserUID, currentUserEmail } from './CurrentUser';
 
 async function getUniversityNames() {
   const apiUrl = 'https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json';
@@ -252,7 +251,6 @@ function ProfileCreation({ userProfile }) {
       }
 
       const result = await response.json();
-      //setCurrentUserUID(result.uid); // Set the current user UID
       sessionStorage.setItem('userUID', result.uid); // Save the UID to sessionStorage
       navigate('/preferences');
     } catch (error) {
