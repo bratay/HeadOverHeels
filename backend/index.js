@@ -108,6 +108,7 @@ app.get('/getRecommendations', async (req, res) => {
 
 app.post('/sendMessage', async (req, res) => {
   const messageData = req.body;
+  console.log("send message query: " + req.query); // Log the query parameters
 
   try {
     await sendMessage(pool, messageData);
@@ -144,7 +145,7 @@ app.post('/swipe', async (req, res) => {
 });
 
 app.get('/getMatches', async (req, res) => {
-  const { uid } = req.query; // Change from req.body to req.query
+  const { uid } = req.query;
 
   try {
     const result = await getMatches(pool, uid);
@@ -169,7 +170,9 @@ app.get('/getConversations', async (req, res) => {
 });
 
 app.get('/getMessages', async (req, res) => {
-  const { uid, receiverUid } = req.body;
+  const { uid, receiverUid } = req.query;
+  // console.log("get messages query: " + req.body);
+  console.log("Get messages API endpoint start ids: ", uid, receiverUid);
 
   try {
     const result = await getMessages(pool, uid, receiverUid);
@@ -194,8 +197,6 @@ app.put('/blockUser', async (req, res) => {
 
 app.get('/getUserID', async (req, res) => {
   const { googleClientId } = req.query;
-  console.log("body: " + req.body);
-  console.log("query: " + req.query);
 
   try {
     const uid = await getUserID(pool, googleClientId);

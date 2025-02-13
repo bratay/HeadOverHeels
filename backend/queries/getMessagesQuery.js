@@ -6,9 +6,11 @@ async function getMessages(pool, uid, receiverUid) {
     ORDER BY timestamp;
   `;
   const values = [uid, receiverUid];
+  console.log('ids: ', values);
 
   try {
     const result = await pool.query(query, values);
+    console.log('messages: ', result.rows);
     return result.rows;
   } catch (err) {
     throw new Error('Error retrieving messages: ' + err.message);

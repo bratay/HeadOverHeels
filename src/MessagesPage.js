@@ -5,11 +5,12 @@ import './MainPage.css';
 const MessagesPage = () => {
   const [matches, setMatches] = useState([]);
   const navigate = useNavigate();
+  const userUid = sessionStorage.getItem('userUID');
 
   useEffect(() => {
     const fetchMatches = async () => {
       try {
-        const response = await fetch('http://localhost:3001/getMatches', {
+        const response = await fetch(`http://localhost:3001/getMatches?uid=${userUid}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -23,6 +24,7 @@ const MessagesPage = () => {
         }
 
         const result = await response.json();
+        console.log('Matches:', result);
         setMatches(result);
       } catch (error) {
         console.error('Error fetching matches:', error);
@@ -30,9 +32,10 @@ const MessagesPage = () => {
     };
 
     fetchMatches();
-  }, []);
+  }, [userUid]);
 
   const handleMatchClick = (matchedUid) => {
+    console.log('Match clicked:', matchedUid);
     navigate(`/messages/${matchedUid}`);
   };
 
@@ -40,13 +43,13 @@ const MessagesPage = () => {
     <div className="messages-page">
       <div className="content">
         <h2>Your Matches</h2>
-        <ul>
+        <div className="matches-container">
           {matches.map((match) => (
-            <li key={match.matchedUid} onClick={() => handleMatchClick(match.matchedUid)}>
-              {match.name}
-            </li>
+            <div key={match.matcheduid} className="match-card" onClick={() => handleMatchClick(match.matcheduid)}>
+              <div className="match-name">{match.name}</div>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   );
